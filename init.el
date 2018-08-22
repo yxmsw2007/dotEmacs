@@ -24,18 +24,36 @@
 (require 'setup-cedet)
 (require 'setup-editing)
 
+;;(require 'setup-sr-speedbar)
 ;; sr-speedbar
 (require 'sr-speedbar)
-;; (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
-;; (setq sr-speedbar-open t)
+
+(setq speedbar-show-unknown-files t)
+(setq speedbar-use-images nil)
+(setq sr-speedbar-width 20)
+(setq sr-speedbar-auto-refresh t)
 (setq sr-speedbar-right-side nil)
-(setq sr-speedbar-skip-other-window-p t)
+(setq speedbar-tag-hierarchy-method nil)
+
+(global-set-key (kbd "<f2>") (lambda()
+                               (interactive)
+                               (sr-speedbar-toggle)))
+
+(sr-speedbar-toggle)
+
+(defun speedbar-directories-update ()
+  "Make speedbar directories incremental update"
+  (speedbar-refresh)
+)
+
+(add-hook 'after-save-hook 'speedbar-directories-update)
 
 ;; company-c-headers
 (add-to-list 'company-backends 'company-c-headers)
 
 ;; monokai-theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/monokai-theme")
+;; (setq molokai-theme-kit t)
 (load-theme 'monokai t)
 
 (setq monokai-height-minus-1 0.8

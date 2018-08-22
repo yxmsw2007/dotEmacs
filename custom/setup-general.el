@@ -1,5 +1,13 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; fullscreen
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; show line numbers
+(global-linum-mode 1) ; always show line numbers
+(setq linum-format "%d| ")  ;set format
 
 (setq gc-cons-threshold 100000000)
 (setq inhibit-startup-message t)
