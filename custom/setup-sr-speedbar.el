@@ -20,3 +20,5 @@
 )
 
 (add-hook 'after-save-hook 'speedbar-directories-update)
+
+(provide 'setup-sr-speedbar)
