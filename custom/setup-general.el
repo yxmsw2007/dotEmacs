@@ -55,12 +55,14 @@
 (global-set-key (kbd "C-c w") 'whitespace-mode)
 (windmove-default-keybindings)
 
+
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
 ;; fullscreen
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;;(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq initial-frame-alist (quote ((fullscreen . maximized))))
 
 ;; show line numbers
 ;; always show line numbers
@@ -68,22 +70,64 @@
 ;; set format
 (setq linum-format "%d| ")
 
+;;(visible-bell t)
+(setq ring-bell-function 'ignore)
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; http://stackoverflow.com/questions/294664/how-to-set-the-font-size-in-emacs
+(set-face-attribute 'default nil :height 120)
+(setq-default cursor-type 'bar)
+(delete-selection-mode t)
+;;(global-hl-line-mode t)
+;;(display-time-24hr-format t)
+;;(display-time-day-and-date t)
+;;(display-time-mode t)
+
+(show-paren-mode t)
+;; config for brace-pattern
+(add-hook 'emacs-lisp-mode-hook 'show-paren-mode)
+(define-advice show-paren-function (:around (fn) fix-show-paren-function)
+  "Highlight enclosing parens."
+  (cond ((looking-at-p "\\s(") (funcall fn))
+	    (t (save-excursion
+	         (ignore-errors (backward-up-list))
+	         (funcall fn)))))
+
+;;(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+;;(sp-local-pair 'lisp-interaction-mode "'" nil :actions nil)
+
+;; 也可以把上面两句合起来
+;; (sp-local-pair '(emacs-lisp-mode lisp-interaction-mode) "'" nil :actions nil)
+
+
 ;; Disable files backup function
 (setq make-backup-files nil)
-
+(global-auto-revert-mode 1)
+(recentf-mode t)
+(setq recentf-max-menu-item 20)
+;;(global-set-key "\C-x\ \C-r" 'recentf-open-files)
 (setq current-language-environment "UTF-8")
-(setq cursor-type (quote bar))
-(setq delete-selection-mode t)
-(setq display-time-24hr-format t)
-(setq display-time-day-and-date t)
-(setq display-time-mode t)
-(setq global-hl-line-mode t)
-(setq org-agenda-files (quote ("~/org")))
+
+;;(setq dired-recursive-deletes 'always)
+;;(setq dired-recursive-copies 'always)
+
+(put 'dired-find-alternate-file 'disabled nil)
+
+;; load Dired Mode
+;; (require 'dired)
+;; (defined-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+
+;; delay load
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
+(setq dired-dwin-target 1)
+
+
+(require 'org)
 (setq org-src-fontify-natively t)
-(setq recentf-mode t)
-(setq recentf-mode t)
-(setq show-paren-mode t)
-(setq visible-bell t)
+(setq org-agenda-files (quote ("~/org")))
+(global-set-key (kbd "C-c a") 'org-agenda)
 
 
 ;; Smart copy, if no region active, it simply copy the current whole line
@@ -124,5 +168,33 @@
 
 (global-set-key (kbd "M-k") 'qiang-copy-line)
 
+
+(defun hidden-dos-eol ()
+  "Do not show ^M in files containing mixed UNIX and DOS line endings."
+  (interactive)
+  (unless buffer-display-table
+    (setq buffer-display-table (make-display-table)))
+  (aset buffer-display-table ?\^M []))
+
+(defun remove-dos-eol ()
+  "Replace DOS eolns CR LF with Unix eolns CR"
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\r" nil t) (replace-match "")))
+
+;;occur mode
+(defun occur-dwim ()
+  "Call `occur' with a sane default."
+  (interactive)
+  (push (if (region-active-p)
+	        (buffer-substring-no-properties
+	         (region-beginning)
+	         (region-end))
+	      (let ((sym (thing-at-point 'symbol)))
+	        (when (stringp sym)
+	          (regexp-quote sym))))
+	    regexp-history)
+  (call-interactively 'occur))
+(global-set-key (kbd "M-s o") 'occur-dwim)
 
 (provide 'setup-general)

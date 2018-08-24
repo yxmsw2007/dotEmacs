@@ -1,3 +1,4 @@
+;;quote == '
 (require 'package)
 (add-to-list 'package-archives
          '("melpa" . "http://melpa.org/packages/") t)
@@ -15,7 +16,6 @@
 
 (add-to-list 'load-path "~/.emacs.d/custom")
 
-(require 'setup-general)
 (if (version< emacs-version "24.4")
   (require 'setup-ivy-counsel)
   (require 'setup-helm)
@@ -27,6 +27,7 @@
 (require 'setup-sr-speedbar)
 (require 'setup-theme)
 (require 'setup-function-args)
+(require 'setup-general)
 (require 'setup-custom)
 
 

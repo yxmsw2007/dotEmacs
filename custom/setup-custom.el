@@ -14,6 +14,17 @@
   (interactive)
   (dired smart-diag-path))
 
+;; 快速打开配置文件
+(defun open-init-file()
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+(defun open-custom-file()
+  (interactive)
+  (find-file "~/.emacs.d/custom/setup-custom.el"))
+(defun open-general-file()
+  (interactive)
+  (find-file "~/.emacs.d/custom/setup-general.el"))
+
 ;;定义快捷键
 ;;(define-key-list
 ;;  global-map
@@ -31,5 +42,11 @@
 ;;(semantic-add-system-include "/usr/include/boost" 'c++-mode)
 ;;(semantic-add-system-include "~/linux/kernel")
 ;;(semantic-add-system-include "~/linux/include")
+
+(require 'popwin)
+(popwin-mode t)
+
+;; undo-tree
+(push '(" *undo-tree*" :width 0.3 :position right) popwin:special-display-config)
 
 (provide 'setup-custom)

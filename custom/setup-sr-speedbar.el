@@ -12,7 +12,7 @@
                                (interactive)
                                (sr-speedbar-toggle)))
 
-(sr-speedbar-toggle)
+;;(sr-speedbar-toggle)
 
 (defun speedbar-directories-update ()
   "Make speedbar directories incremental update"
