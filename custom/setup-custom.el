@@ -28,8 +28,22 @@
 ;;定义快捷键
 ;;(define-key-list
 ;;  global-map
-;;  `(("C-x G p" goto-app-dir))))
+;;  '(("C-x G p" goto-app-dir))))
 
+(defun list-funcs (arg)
+  "List functions in buffer."
+  (interactive "p")
+  (message "functions")
+;;;  (list-matching-lines "^\\bstatic\\b*\\binline\\b*[ ]*[A-Za-z_<>]+[ ]+[A-Za-z0-9_:]+[\(]"))
+  (list-matching-lines "^[A-Za-z0-9_]+[ ]+[A-Za-z0-9_<>: ]*[\(]"))
+
+;;设置默认读入文件编码
+(prefer-coding-system 'utf-8)
+
+;;设置写入文件编码
+(setq default-buffer-file-coding-system 'utf-8)
+
+(set-language-environment 'utf-8)
 
 (define-key c-mode-map  [(tab)] 'company-complete)
 (define-key c++-mode-map  [(tab)] 'company-complete)
