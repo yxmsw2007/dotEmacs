@@ -97,7 +97,7 @@
 ;;(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
 ;;(sp-local-pair 'lisp-interaction-mode "'" nil :actions nil)
 
-;; “≤ø…“‘∞—…œ√Ê¡Ωæ‰∫œ∆¿¥
+;; ‰πüÂèØ‰ª•Êää‰∏äÈù¢‰∏§Âè•ÂêàËµ∑Êù•
 ;; (sp-local-pair '(emacs-lisp-mode lisp-interaction-mode) "'" nil :actions nil)
 
 
@@ -196,5 +196,51 @@
 	    regexp-history)
   (call-interactively 'occur))
 (global-set-key (kbd "M-s o") 'occur-dwim)
+
+(defun js2-imenu-make-index ()
+      (interactive)
+      (save-excursion
+	;; (setq imenu-generic-expression '((nil "describe\\(\"\\(.+\\)\"" 1)))
+	(imenu--generic-function '(("describe" "\\s-*describe\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+				   ("it" "\\s-*it\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+				   ("test" "\\s-*test\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+				   ("before" "\\s-*before\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+				   ("after" "\\s-*after\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+				   ("Function" "function[ \t]+\\([a-zA-Z0-9_$.]+\\)[ \t]*(" 1)
+				   ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
+				   ("Function" "^var[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
+				   ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*()[ \t]*{" 1)
+				   ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+				   ("Task" "[. \t]task([ \t]*['\"]\\([^'\"]+\\)" 1)))))
+(add-hook 'js2-mode-hook
+	      (lambda ()
+		(setq imenu-create-index-function 'js2-imenu-make-index)))
+
+(global-set-key (kbd "M-s i") 'counsel-imenu)
+
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(global-set-key (kbd "C-c p s") 'helm-do-ag-project-root)
+
+;;windresize
+;;(require 'windresize)
+;;(global-set-key (kbd "C-c m") 'windresize)
+
+
+;;Winner-mode
+;;Ctrl-c ‚Üê previous windows
+;;Ctrl-c ‚Üí next windows
+(when (fboundp 'winner-mode)
+  (winner-mode)
+  (windmove-default-keybindings))
+
+;;windmove-mode
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings)
+  (global-set-key (kbd "C-c j")  'windmove-left)
+  (global-set-key (kbd "C-c l") 'windmove-right)
+  (global-set-key (kbd "C-c i")    'windmove-up)
+  (global-set-key (kbd "C-c k") 'windmove-down))
 
 (provide 'setup-general)
